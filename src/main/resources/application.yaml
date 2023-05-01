@@ -1,0 +1,23 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:blogdb
+    username: sa
+    password: pass1234
+  h2:
+    console: 
+      enabled: true
+server:
+  servlet:
+    context-path: /blog
+  error:
+    include-stacktrace: never
+    include-message: always
+logging:
+  file:
+    path: logs/
+    name: logs/application.log
