@@ -1,4 +1,4 @@
-# CarePay Java Assignment
+# Blog Manager
 
 ## Introduction
 This assignment consists of two parts:
@@ -35,8 +35,4 @@ This assignment consists of two parts:
 ## Instructions
 Use the following to run: `./gradlew bootRun`
 To run the tests, use `./gradlew check`
-
-## Evaluation criteria:
-1) Your work will be assessed as though it is an actual Pull Request within CarePay, therefore consider this code as if it will be sent to production once reviewed, and do what you believe is appropriate to demonstrate your skills or way of working. 
-2) Tasks described [here](#Tasks).
 
