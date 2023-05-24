@@ -25,14 +25,16 @@ public class CommentServiceImpl implements CommentService{
 	Logger logger = LoggerFactory.getLogger(CommentServiceImpl.class);
 	
 	private final CommentRepository commentRepository;
+	private final PostService postService;
 	
-	public CommentServiceImpl(CommentRepository commentRepository) {
+	public CommentServiceImpl(CommentRepository commentRepository, PostService postService) {
 		this.commentRepository = commentRepository;
+		this.postService = postService;
 	}
 	
 	@Override
 	public CommentDetails createComment(Long postId, @Valid CreateCommentRequest request) {
-		Post post = ServiceUtils.getPostById(postId);
+		Post post = postService.getPostById(postId);
 		
         Comment comment = Comment.builder()
         		.author(request.getAuthor())
@@ -50,7 +52,7 @@ public class CommentServiceImpl implements CommentService{
 
 	@Override
 	public Page<CommentInfo> getComments(Long postId, Pageable pageable) {
-		Post post = ServiceUtils.getPostById(postId);
+		Post post = postService.getPostById(postId);
 		
 		Page<Comment> comments = commentRepository.findAllByPost(post, pageable);
 		Page<CommentInfo> commentInfoPage = comments.map(new Function<Comment, CommentInfo>() {

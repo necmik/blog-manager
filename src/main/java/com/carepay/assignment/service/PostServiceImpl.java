@@ -61,11 +61,20 @@ public class PostServiceImpl implements PostService {
     	
         return postInfoPage;
     }
+    
+    @Override
+    public Post getPostById(Long id) {
+    	Optional<Post> optPost = postRepository.findById(id);
+        if (optPost.isEmpty()) {
+        	throw new HttpNotFoundErrorException("Post with id " + id + " does not exist");
+        }      
+        
+        return optPost.get();
+    }
 
     @Override
-    public PostDetails getPostDetails(Long id) {
-        Post post = ServiceUtils.getPostById(id);
-        
+    public PostDetails getPostDetails(Long id) {        
+        Post post = getPostById(id);
         PostDetails postDetails = new PostDetails(post);
         
         return postDetails;
