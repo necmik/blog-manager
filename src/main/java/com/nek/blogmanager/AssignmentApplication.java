@@ -1,4 +1,4 @@
-package com.carepay.assignment;
+package com.nek.blogmanager;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;

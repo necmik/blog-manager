@@ -1,4 +1,4 @@
-package com.carepay.assignment.domain;
+package com.nek.blogmanager.domain;
 
 import java.util.HashSet;
 import java.util.Set;

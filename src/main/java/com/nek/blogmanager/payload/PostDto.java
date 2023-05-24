@@ -1,4 +1,4 @@
-package com.carepay.assignment.payload;
+package com.nek.blogmanager.payload;
 
 /**
  * Dto object to be returned to post list service

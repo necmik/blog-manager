@@ -1,11 +1,11 @@
-package com.carepay.assignment.service;
+package com.nek.blogmanager.service;
 
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.carepay.assignment.domain.Comment;
+import com.nek.blogmanager.domain.Comment;
 
 public interface CommentService {
 	Comment createComment(Long postId, @Valid Comment comment);

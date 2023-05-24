@@ -1,4 +1,4 @@
-package com.carepay.assignment.service;
+package com.nek.blogmanager.service;
 
 import java.util.Optional;
 
@@ -10,9 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.carepay.assignment.domain.Post;
-import com.carepay.assignment.exception.HttpNotFoundErrorException;
-import com.carepay.assignment.repository.PostRepository;
+import com.nek.blogmanager.domain.Post;
+import com.nek.blogmanager.exception.HttpNotFoundErrorException;
+import com.nek.blogmanager.repository.PostRepository;
 
 @Service
 public class PostServiceImpl implements PostService {

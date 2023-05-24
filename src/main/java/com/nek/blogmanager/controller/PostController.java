@@ -1,4 +1,4 @@
-package com.carepay.assignment.controller;
+package com.nek.blogmanager.controller;
 
 import java.util.stream.Collectors;
 
@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.carepay.assignment.domain.Post;
-import com.carepay.assignment.payload.CreatePostRequest;
-import com.carepay.assignment.payload.PostDto;
-import com.carepay.assignment.service.PostService;
+import com.nek.blogmanager.domain.Post;
+import com.nek.blogmanager.payload.CreatePostRequest;
+import com.nek.blogmanager.payload.PostDto;
+import com.nek.blogmanager.service.PostService;
 
 @RestController
 @RequestMapping(path = "/posts", produces = MediaType.APPLICATION_JSON_VALUE)

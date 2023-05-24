@@ -1,4 +1,4 @@
-package com.carepay.assignment;
+package com.nek.blogmanager;
 
 import java.io.IOException;
 

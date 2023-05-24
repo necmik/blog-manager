@@ -1,4 +1,4 @@
-package com.carepay.assignment.exception;
+package com.nek.blogmanager.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
