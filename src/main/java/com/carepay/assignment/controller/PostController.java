@@ -1,8 +1,12 @@
 package com.carepay.assignment.controller;
 
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,33 +19,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.carepay.assignment.domain.Post;
 import com.carepay.assignment.payload.CreatePostRequest;
-import com.carepay.assignment.payload.PostDetails;
-import com.carepay.assignment.payload.PostInfo;
+import com.carepay.assignment.payload.PostDto;
 import com.carepay.assignment.service.PostService;
 
 @RestController
 @RequestMapping(path = "/posts", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PostController {
 	private final PostService postService;
+	private final ModelMapper modelMapper;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, ModelMapper modelMapper) {
     	this.postService = postService;
+    	this.modelMapper = modelMapper;
     }
 
     @GetMapping
-    Page<PostInfo> getPosts(Pageable pageable) {
-    	return postService.getPosts(pageable);
+    Page<PostDto> getPosts(Pageable pageable) {
+    	Page<Post> posts = postService.getPosts(pageable);
+    	
+    	Page<PostDto> postInfoPage = new PageImpl<>(posts.stream()
+    	          .map(this::convertToDto)
+    	          .collect(Collectors.toList()));
+    	
+        return postInfoPage;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    PostDetails createPost(@Valid @RequestBody CreatePostRequest createPostRequest) {
-    	return postService.createPost(createPostRequest);
+    Post createPost(@Valid @RequestBody CreatePostRequest createPostRequest) {
+    	Post post = convertToEntity(createPostRequest);
+    	return postService.createPost(post);
     }
 
     @GetMapping("{id}")
-    PostDetails getPostDetails(@PathVariable("id") final Long id) {
+    Post getPostDetails(@PathVariable("id") final Long id) {
     	return postService.getPostDetails(id);
     }
 
@@ -49,5 +62,16 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     void deletePost(@PathVariable("id") final Long id) {
     	postService.deletePost(id);
+    }
+    
+    private PostDto convertToDto(Post post) {
+        PostDto postDto = modelMapper.map(post, PostDto.class);
+        return postDto;
+    }
+    
+    private Post convertToEntity(CreatePostRequest createPostRequest) {
+        Post post = modelMapper.map(createPostRequest, Post.class);
+     
+        return post;
     }
 }

@@ -1,7 +1,7 @@
 package com.carepay.assignment.service;
 
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -14,9 +14,6 @@ import org.springframework.stereotype.Service;
 import com.carepay.assignment.domain.Comment;
 import com.carepay.assignment.domain.Post;
 import com.carepay.assignment.exception.HttpNotFoundErrorException;
-import com.carepay.assignment.payload.CommentDetails;
-import com.carepay.assignment.payload.CommentInfo;
-import com.carepay.assignment.payload.CreateCommentRequest;
 import com.carepay.assignment.repository.CommentRepository;
 
 @Service
@@ -33,67 +30,50 @@ public class CommentServiceImpl implements CommentService{
 	}
 	
 	@Override
-	public CommentDetails createComment(Long postId, @Valid CreateCommentRequest request) {
-		Post post = postService.getPostById(postId);
+	public Comment createComment(Long postId, @Valid Comment comment) {
+		Post post = postService.getPostDetails(postId);
+		comment.setPost(post);
 		
-        Comment comment = Comment.builder()
-        		.author(request.getAuthor())
-        		.comment(request.getComment())
-        		.post(post)
-        		.build();
-        
         Comment saved = commentRepository.save(comment);
         
-        CommentDetails commentDetails = new CommentDetails(saved);
         logger.info("Comment saved with Id: {}", saved.getId());
         
-        return commentDetails;
+        return saved;
 	}
 
 	@Override
-	public Page<CommentInfo> getComments(Long postId, Pageable pageable) {
-		Post post = postService.getPostById(postId);
+	public Page<Comment> getComments(Long postId, Pageable pageable) {
+		Post post = postService.getPostDetails(postId);
 		
 		Page<Comment> comments = commentRepository.findAllByPost(post, pageable);
-		Page<CommentInfo> commentInfoPage = comments.map(new Function<Comment, CommentInfo>() {
-    	    @Override
-    	    public CommentInfo apply(Comment comment) {
-    	    	CommentInfo commentInfo = new CommentInfo();
-    	    	commentInfo.setId(comment.getId());
-    	    	commentInfo.setAuthor(comment.getAuthor());
-    	    	commentInfo.setComment(comment.getComment());
-    	        return commentInfo;
-    	    }
-    	});
 		
-		return commentInfoPage;
+		return comments;
 	}
 
 	@Override
-	public CommentDetails getCommentDetails(Long postId, Long id) {
-		// For a basic security, get comment by postId and id instead of with only id
-		Comment comment = getComment(postId, id);		
-        CommentDetails commentDetails = new CommentDetails(comment);
-        
-        return commentDetails;
+	public Comment getCommentDetails(Long postId, Long id) {
+        return getCommentByPostId(postId, id);
 	}
 
 	@Override
 	public void deleteComment(Long postId, Long id) {
-		// For a basic security, check if the comment belongs to the post specified
-		Comment comment = getComment(postId, id);
+		Comment comment = getCommentByPostId(postId, id);
 		 
 		commentRepository.delete(comment);
     	logger.info("Comment with Id {} deleted", id);
 	}	
 	
-	private Comment getComment(Long postId, Long id) {
-		Optional<Comment> comment = commentRepository.findById(id);
-		if (comment.isEmpty() || !comment.get().getPost().getId().equals(postId)) {
-			throw new HttpNotFoundErrorException("Comment with id " + id + " does not exist");
+	private Comment getCommentByPostId(Long postId, Long commentId) {
+		Post post = postService.getPostDetails(postId);
+		Set<Comment> comments = post.getComments();
+		Optional<Comment> comment = comments.stream()
+				.filter((Comment c) -> c.getId().equals(commentId))
+				.findFirst();
+		
+		if (!comment.isPresent()) {
+			throw new HttpNotFoundErrorException("Comment with id " + commentId + " does not exist");
 		}
 		
         return comment.get();
 	}
-
 }

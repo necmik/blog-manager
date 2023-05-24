@@ -1,7 +1,12 @@
 package com.carepay.assignment.controller;
 
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import com.carepay.assignment.payload.CommentDetails;
-import com.carepay.assignment.payload.CommentInfo;
+
+import com.carepay.assignment.domain.Comment;
+import com.carepay.assignment.payload.CommentDto;
 import com.carepay.assignment.payload.CreateCommentRequest;
 import com.carepay.assignment.service.CommentService;
 
@@ -22,24 +28,34 @@ import com.carepay.assignment.service.CommentService;
 @RequestMapping(path = "/posts", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CommentController {
 	 private final CommentService commentService;
+	 private final ModelMapper modelMapper;
 	 
-	 public CommentController(CommentService commentService) {
+	 public CommentController(CommentService commentService, ModelMapper modelMapper) {
 		 this.commentService = commentService;
+		 this.modelMapper = modelMapper;
 	 }
 	 
 	 @GetMapping("{postId}/comments")
-	 Page<CommentInfo> getComments(@PathVariable("postId") final Long postId, Pageable pageable) {
-		 return commentService.getComments(postId, pageable);
+	 Page<CommentDto> getComments(@PathVariable("postId") final Long postId, Pageable pageable) {
+		 Page<Comment> comments = commentService.getComments(postId, pageable);
+	    	
+		 Page<CommentDto> commentInfoPage = new PageImpl<>(comments.stream()
+    	          .map(this::convertToDto)	
+    	          .collect(Collectors.toList()));
+	    	
+		 return commentInfoPage;
 	 }
 	
 	 @PostMapping("{postId}/comments")
 	 @ResponseStatus(HttpStatus.CREATED)
-	 CommentDetails createComment(@PathVariable("postId") final Long postId, @Valid @RequestBody CreateCommentRequest request) {
-		 return commentService.createComment(postId, request);
+	 Comment createComment(@PathVariable("postId") final Long postId, 
+			 @Valid @RequestBody CreateCommentRequest request) {
+		 Comment comment = convertToEntity(request);
+		 return commentService.createComment(postId, comment);
 	 }
 	
 	 @GetMapping("{postId}/comments/{id}")
-	 CommentDetails getCommentDetails(@PathVariable("postId") final Long postId, @PathVariable("id") final Long id) {
+	 Comment getCommentDetails(@PathVariable("postId") final Long postId, @PathVariable("id") final Long id) {
 		 return commentService.getCommentDetails(postId, id);
 	 }
 	
@@ -47,5 +63,16 @@ public class CommentController {
 	 @ResponseStatus(HttpStatus.OK)
 	 void deletePost(@PathVariable("postId") final Long postId, @PathVariable("id") final Long id) {
 		 commentService.deleteComment(postId, id);
+	 }
+	 
+	 private CommentDto convertToDto(Comment comment) {
+		 CommentDto commentDto = modelMapper.map(comment, CommentDto.class);
+		 return commentDto;
+	 }
+	 
+	 private Comment convertToEntity(CreateCommentRequest createCommentRequest) {
+		 Comment comment = modelMapper.map(createCommentRequest, Comment.class);
+	     
+		 return comment;
 	 }
 }

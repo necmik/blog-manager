@@ -5,16 +5,14 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.carepay.assignment.payload.CommentDetails;
-import com.carepay.assignment.payload.CommentInfo;
-import com.carepay.assignment.payload.CreateCommentRequest;
+import com.carepay.assignment.domain.Comment;
 
 public interface CommentService {
-	CommentDetails createComment(Long postId, @Valid CreateCommentRequest request);
+	Comment createComment(Long postId, @Valid Comment comment);
 
-    Page<CommentInfo> getComments(Long postId, final Pageable pageable);
+    Page<Comment> getComments(Long postId, final Pageable pageable);
 
-    CommentDetails getCommentDetails(Long postId, Long id);
+    Comment getCommentDetails(Long postId, Long id);
 
     void deleteComment(Long postId, Long id);
 }
