@@ -2,8 +2,6 @@ package com.nek.blogmanager.controller;
 
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,6 +21,8 @@ import com.nek.blogmanager.domain.Comment;
 import com.nek.blogmanager.payload.CommentDto;
 import com.nek.blogmanager.payload.CreateCommentRequest;
 import com.nek.blogmanager.service.CommentService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/posts", produces = MediaType.APPLICATION_JSON_VALUE)

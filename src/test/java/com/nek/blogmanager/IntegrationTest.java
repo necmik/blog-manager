@@ -1,4 +1,4 @@
-package com.carepay.assignment;
+package com.nek.blogmanager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

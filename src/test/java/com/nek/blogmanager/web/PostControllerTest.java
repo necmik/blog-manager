@@ -1,4 +1,4 @@
-package com.carepay.assignment.web;
+package com.nek.blogmanager.web;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
-import com.carepay.assignment.IntegrationTest;
+import com.nek.blogmanager.IntegrationTest;
 
 public class PostControllerTest extends IntegrationTest {
 	
@@ -25,7 +25,7 @@ public class PostControllerTest extends IntegrationTest {
 
     @Test
     void getPostDetails() throws Exception {
-        mvc.perform(get("/posts/1"))        		
+        mvc.perform(get("/posts/2"))        		
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", equalTo("Welcome")));
     }

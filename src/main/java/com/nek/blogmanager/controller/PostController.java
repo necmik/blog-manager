@@ -1,9 +1,6 @@
 package com.nek.blogmanager.controller;
 
 import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,6 +20,8 @@ import com.nek.blogmanager.domain.Post;
 import com.nek.blogmanager.payload.CreatePostRequest;
 import com.nek.blogmanager.payload.PostDto;
 import com.nek.blogmanager.service.PostService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "/posts", produces = MediaType.APPLICATION_JSON_VALUE)
